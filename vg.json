@@ -10,7 +10,7 @@
        "format": {"type":"json", "parse":{"start":"date", "end": "date"}},
        "transform": [
          {"type": "filter",
-           "expr": "datum.end < datetime(2017, 8-1, 6)"
+           "expr": "datum.start >= datetime(2017, 8-1, day) && datum.end < datetime(2017, 8-1, day+1)"
          },
          {"type":"formula",
           "as": "desc",
@@ -28,6 +28,11 @@
         {"events": "rect:mouseover", "update": "datum"},
         {"events": "rect:mouseout",  "update": "{}"}
       ]
+    },
+    {
+      "name": "day",
+      "value": 5,
+      "bind": {"input": "radio", "options": [5, 6]}
     }
   ],
 
@@ -69,7 +74,8 @@
           "y": {"scale": "yscale", "field": "start"},
           "y2": {"scale": "yscale", "field": "end"},
           "fill": {"scale": "color", "field": "community"},
-          "tooltip": {"field": "desc"}
+          "tooltip": {"field": "desc"},
+          "stroke": {"value": "#000"}
         },
         "update": {
           "fillOpacity": {"value": 0.5}
@@ -83,8 +89,8 @@
       "type": "rect",
       "encode": {
         "update": {
-          "fill": {"value": "#000"},
-          "fillOpacity": {"value": 0.1},
+          "fill": {"value": "#fff"},
+          "fillOpacity": {"value": 0.5},
           "x": {"value": 0},
           "width": {"field": {"group": "width"}},
           "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
@@ -98,6 +104,7 @@
         "enter": {
           "baseline": {"value": "bottom"},
           "align": {"value": "left"},
+          "fontSize": {"value": 14},
           "fill": {"value": "#000"}
         },
         "update": {
@@ -114,6 +121,7 @@
         "enter": {
           "baseline": {"value": "bottom"},
           "align": {"value": "left"},
+          "fontSize": {"value": 14},
           "fill": {"value": "#000"}
         },
         "update": {
@@ -121,18 +129,6 @@
           "width": {"field": {"group": "width"}},
           "y": {"scale": "yscale", "signal": "tooltip.start", "offset": 10},
           "text": {"signal": "tooltip.summary"}
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "encode": {
-        "update": {
-          "fillOpacity": {"value": 0.0},
-          "x": {"value": 0},
-          "x2": {"value": 480},
-          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
-          "height": {"value": 20}
         }
       }
     }
