@@ -2,8 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega/v3.0.json",
   "width": 480,
   "height": 1600,
-  "padding": 100,
-
+  "padding": 50,
   "data":[
     { "name": "table",
        "url": "https://coscup.org/2017-assets/json/submissions.json",
@@ -59,6 +58,7 @@
   ],
 
   "axes": [
+    { "orient": "top", "scale": "xscale" },
     { "orient": "bottom", "scale": "xscale" },
     { "orient": "left", "scale": "yscale" }
   ],
@@ -90,7 +90,7 @@
       "encode": {
         "update": {
           "fill": {"value": "#fff"},
-          "fillOpacity": {"value": 0.5},
+          "fillOpacity": {"value": 0.7},
           "x": {"value": 0},
           "width": {"field": {"group": "width"}},
           "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
