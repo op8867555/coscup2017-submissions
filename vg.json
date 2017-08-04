@@ -1,0 +1,140 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "width": 480,
+  "height": 1600,
+  "padding": 100,
+
+  "data":[
+    { "name": "table",
+       "url": "https://coscup.org/2017-assets/json/submissions.json",
+       "format": {"type":"json", "parse":{"start":"date", "end": "date"}},
+       "transform": [
+         {"type": "filter",
+           "expr": "datum.end < datetime(2017, 8-1, 6)"
+         },
+         {"type":"formula",
+          "as": "desc",
+          "expr": "datum.speaker.name + ' - ' + datum.subject"
+         }
+       ]
+    }
+  ],
+
+  "signals": [
+    {
+      "name": "tooltip",
+      "value": {},
+      "on": [
+        {"events": "rect:mouseover", "update": "datum"},
+        {"events": "rect:mouseout",  "update": "{}"}
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "xscale",
+      "type": "band",
+      "domain": {"data": "table", "field": "room", "sort": true},
+      "range": "width"
+    },
+    {
+      "name": "yscale",
+      "type": "time",
+      "domain": {"data": "table", "fields": ["start", "end"]},
+      "range": "height",
+      "reverse": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "table", "field": "community"},
+      "range": {"scheme": "category20"}
+    }
+  ],
+
+  "axes": [
+    { "orient": "bottom", "scale": "xscale" },
+    { "orient": "left", "scale": "yscale" }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data":"table"},
+      "encode": {
+        "enter": {
+          "xc": {"scale": "xscale", "field": "room", "band":0.5},
+          "width": {"scale": "xscale", "band": 0.5},
+          "y": {"scale": "yscale", "field": "start"},
+          "y2": {"scale": "yscale", "field": "end"},
+          "fill": {"scale": "color", "field": "community"},
+          "tooltip": {"field": "desc"}
+        },
+        "update": {
+          "fillOpacity": {"value": 0.5}
+        },
+        "hover": {
+          "fillOpacity": {"value": 1}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "encode": {
+        "update": {
+          "fill": {"value": "#000"},
+          "fillOpacity": {"value": 0.1},
+          "x": {"value": 0},
+          "width": {"field": {"group": "width"}},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
+          "height": {"value": 50}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {"value": "bottom"},
+          "align": {"value": "left"},
+          "fill": {"value": "#000"}
+        },
+        "update": {
+          "x": {"value": 0, "offset": 20},
+          "width": {"field": {"group": "width"}},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -8},
+          "text": {"signal": "tooltip.desc"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {"value": "bottom"},
+          "align": {"value": "left"},
+          "fill": {"value": "#000"}
+        },
+        "update": {
+          "x": {"value": 0, "offset": 20},
+          "width": {"field": {"group": "width"}},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": 10},
+          "text": {"signal": "tooltip.summary"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "encode": {
+        "update": {
+          "fillOpacity": {"value": 0.0},
+          "x": {"value": 0},
+          "x2": {"value": 480},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
+          "height": {"value": 20}
+        }
+      }
+    }
+  ]
+}
