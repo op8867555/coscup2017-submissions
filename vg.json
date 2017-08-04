@@ -13,7 +13,7 @@
          },
          {"type":"formula",
           "as": "desc",
-          "expr": "datum.speaker.name + ' - ' + datum.subject"
+          "expr": "'[' + datum.lang + ']' + datum.speaker.name + ' - ' + datum.subject"
          }
        ]
     }
@@ -25,13 +25,21 @@
       "value": {},
       "on": [
         {"events": "rect:mouseover", "update": "datum"},
-        {"events": "rect:mouseout",  "update": "{}"}
+        {"events": "rect:mouseout",  "update": "{'start': -200}"}
       ]
     },
     {
       "name": "day",
       "value": 5,
       "bind": {"input": "radio", "options": [5, 6]}
+    },
+    {
+      "name": "now",
+      "update": "now()",
+      "on": [
+        {"events": "mousemove", "update": "now()"},
+        {"events": "touchstart", "update": "now()"}
+      ]
     }
   ],
 
@@ -47,6 +55,7 @@
       "type": "time",
       "domain": {"data": "table", "fields": ["start", "end"]},
       "range": "height",
+      "clamp": true,
       "reverse": true
     },
     {
@@ -74,8 +83,8 @@
           "y": {"scale": "yscale", "field": "start"},
           "y2": {"scale": "yscale", "field": "end"},
           "fill": {"scale": "color", "field": "community"},
-          "tooltip": {"field": "desc"},
-          "stroke": {"value": "#000"}
+          "stroke": {"scale": "color", "field": "community"},
+          "tooltip": {"field": "summary"}
         },
         "update": {
           "fillOpacity": {"value": 0.5}
@@ -89,11 +98,24 @@
       "type": "rect",
       "encode": {
         "update": {
-          "fill": {"value": "#fff"},
+          "fill": {"value": "black"},
           "fillOpacity": {"value": 0.7},
           "x": {"value": 0},
           "width": {"field": {"group": "width"}},
-          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -25},
+          "yc": {"scale": "yscale", "signal": "now"},
+          "height": {"value": 3}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "encode": {
+        "update": {
+          "fill": {"value": "white"},
+          "fillOpacity": {"value": 0.7},
+          "x": {"value": 0},
+          "width": {"field": {"group": "width"}},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -50},
           "height": {"value": 50}
         }
       }
@@ -110,7 +132,7 @@
         "update": {
           "x": {"value": 0, "offset": 20},
           "width": {"field": {"group": "width"}},
-          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -8},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -30},
           "text": {"signal": "tooltip.desc"}
         }
       }
@@ -127,7 +149,7 @@
         "update": {
           "x": {"value": 0, "offset": 20},
           "width": {"field": {"group": "width"}},
-          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": 10},
+          "y": {"scale": "yscale", "signal": "tooltip.start", "offset": -10},
           "text": {"signal": "tooltip.summary"}
         }
       }
