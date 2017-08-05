@@ -37,8 +37,7 @@
       "name": "now",
       "update": "now()",
       "on": [
-        {"events": "mousemove", "update": "now()"},
-        {"events": "touchstart", "update": "now()"}
+        {"events": "mousemove", "update": "now()"}
       ]
     }
   ],
